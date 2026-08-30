@@ -44,6 +44,12 @@ npm test
 
 `npm test` creates a production build and runs domain and rendered-accessibility tests.
 
+## GitHub Pages deployment
+
+Every push to `main` runs the GitHub Actions workflow in `.github/workflows/deploy-pages.yml`. It builds a static export with the `/learn-jyotish` base path and publishes it to GitHub Pages. The Vinext/Sites build remains unchanged for local development and the existing Sites deployment.
+
+The published address is [https://jeetblahiri.github.io/learn-jyotish/](https://jeetblahiri.github.io/learn-jyotish/).
+
 ## Project structure
 
 ```text
