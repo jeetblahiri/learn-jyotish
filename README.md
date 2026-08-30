@@ -1,98 +1,85 @@
-# vinext-starter
+# Drishti — Interactive Jyotish Learning Laboratory
 
-A clean full-stack starter running on
-[vinext](https://github.com/cloudflare/vinext), with optional Cloudflare D1 and
-Drizzle support.
+Drishti is an interactive web application for learning interpretive Vedic astrology through a small, explicit set of generative principles. It keeps astronomical calculations, inherited Jyotish rules, and interpretive hypotheses visibly separate so that learners can inspect how a conclusion was produced instead of memorising isolated statements.
 
-## Prerequisites
+## What you can explore
 
-- Node.js `>=22.13.0`
+- Generate a natal chart from date, time, birthplace, coordinates, and historical IANA timezone data.
+- Work with canonical North Indian D1, D9, D10, and Chandra Lagna chart views.
+- Select planets, houses, signs, nakshatras, padas, lordships, dignities, dispositors, aspects, functional roles, and yoga candidates.
+- Compare natal promise with Vimshottari mahadasha/antardasha periods and up to 30 years of transits.
+- Rotate an interactive geocentric learning sphere with zodiac, ecliptic, equator, horizon, and nakshatra layers.
+- Build interpretations from supporting, modifying, and counter-evidence with visible rule provenance.
+- Follow a 12-module foundation course, structured learning paths, worked examples, ambiguous cases, and practice exercises.
+- Save charts, learning progress, and a reasoning notebook locally in the browser.
+- Export and import the private workspace as JSON or print a learning report.
 
-## Quick Start
+## Learning model
+
+Drishti labels knowledge by type:
+
+1. **Astronomical fact** — a calculated position, separation, speed, or time interval.
+2. **Traditional rule** — an inherited Jyotish mapping such as lordship, dignity, or graha drishti.
+3. **Interpretive hypothesis** — a contextual reading that should be tested against supporting and contradictory evidence.
+
+The application is educational and intentionally non-deterministic. It does not present astrological interpretation as scientific fact or as a replacement for medical, legal, financial, or mental-health advice.
+
+## Run locally
+
+Requirements: Node.js `>=22.13.0` and npm.
 
 ```bash
 npm install
 npm run dev
-npm run build
 ```
 
-This starter does not use `wrangler.jsonc`.
+Open [http://localhost:3000](http://localhost:3000).
 
-## Included Shape
+## Validation
 
-- edit site code under `app/`
-- `.openai/hosting.json` declares optional Sites D1 and R2 bindings
-- `vite.config.ts` simulates declared bindings for local development
-- `db/schema.ts` starts intentionally empty
-- `examples/d1/` contains an optional D1 example surface
-- `drizzle.config.ts` supports local migration generation when needed
-
-## Workspace Auth Headers
-
-OpenAI workspace sites can read the current user's email from
-`oai-authenticated-user-email`.
-
-SIWC-authenticated workspace sites may also receive
-`oai-authenticated-user-full-name` when the user's SIWC profile has a non-empty
-`name` claim. The full-name value is percent-encoded UTF-8 and is accompanied by
-`oai-authenticated-user-full-name-encoding: percent-encoded-utf-8`.
-
-Treat the full name as optional and fall back to email when it is absent:
-
-```tsx
-import { headers } from "next/headers";
-
-export default async function Home() {
-  const requestHeaders = await headers();
-  const email = requestHeaders.get("oai-authenticated-user-email");
-  const encodedFullName = requestHeaders.get("oai-authenticated-user-full-name");
-  const fullName =
-    encodedFullName &&
-    requestHeaders.get("oai-authenticated-user-full-name-encoding") ===
-      "percent-encoded-utf-8"
-      ? decodeURIComponent(encodedFullName)
-      : null;
-
-  const displayName = fullName ?? email;
-  // ...
-}
+```bash
+npm run lint
+npm test
 ```
 
-## Optional Dispatch-Owned ChatGPT Sign-In
+`npm test` creates a production build and runs domain and rendered-accessibility tests.
 
-Import the ready-to-use helpers from `app/chatgpt-auth.ts` when the site needs
-optional or required ChatGPT sign-in:
+## Project structure
 
-- Use `getChatGPTUser()` for optional signed-in UI.
-- Use `requireChatGPTUser(returnTo)` for server-rendered pages that should send
-  anonymous visitors through Sign in with ChatGPT.
-- Use `chatGPTSignInPath(returnTo)` and `chatGPTSignOutPath(returnTo)` for
-  browser links or actions.
-- Pass a same-origin relative `returnTo` path for the destination after sign-in
-  or sign-out. The helper validates and safely encodes it.
-- Mark protected pages with `export const dynamic = "force-dynamic"` because
-  they depend on per-request identity headers.
+```text
+app/                     Application entry point and global design tokens
+components/app/          Learning workspace, navigation, place search, notebook
+components/jyotish/      North Indian chart, evidence trail, geocentric sky
+lib/content/             Curriculum, profiles, cases, glossary, exercises, safety
+lib/jyotish/             Calculation, varga, rule, yoga, timing, transit, synthesis
+lib/places.ts            Searchable place catalogue and timezone conversion
+lib/workspace-storage.ts Local browser persistence and portable exports
+tests/                   Domain and server-rendered interface tests
+```
 
-Dispatch owns `/signin-with-chatgpt`, `/signout-with-chatgpt`, `/callback`, the
-OAuth cookies, and identity header injection. Do not implement app routes for
-those reserved paths. Routes that do not import and call the helper remain
-anonymous-compatible.
+## Calculation scope and limitations
 
-SIWC establishes identity only; it does not prove workspace membership. Use the
-Sites hosting platform's access policy controls for workspace-wide restrictions,
-or enforce explicit server-side membership or allowlist checks.
+The current engine is designed for transparent learning. It uses Astronomy Engine for planetary astronomy and exposes the sidereal conversion and interpretation pipeline in `lib/jyotish`.
 
-Use SIWC for account pages, user-specific dashboards, saved records, and write
-actions tied to the current ChatGPT user. Leave public content anonymous.
+- Lahiri, Raman, and KP ayanamsha choices are implemented as documented learning-grade approximations.
+- Mean nodes are supported; selecting true nodes produces an explicit fallback warning.
+- The place catalogue is extensive but offline, with custom coordinates and IANA timezones available for locations not listed.
+- Production use requiring Swiss Ephemeris parity should add a verified ephemeris service and regression fixtures before making precision claims.
 
-## Useful Commands
+See [`lib/jyotish/README.md`](lib/jyotish/README.md) for the calculation contract and approximation boundaries.
 
-- `npm run dev`: start local development
-- `npm run build`: verify the vinext build output
-- `npm test`: build the starter and verify its rendered loading skeleton
-- `npm run db:generate`: generate Drizzle migrations after schema changes
+## Privacy
 
-## Learn More
+Birth data, saved charts, lesson progress, and notebook entries remain in browser `localStorage`. The application does not transmit them to an application database. Clearing browser site data removes the workspace unless it has been exported first.
 
-- [vinext Documentation](https://github.com/cloudflare/vinext)
-- [Drizzle D1 Guide](https://orm.drizzle.team/docs/get-started/d1-new)
+## Technology
+
+- React 19 and Next-compatible Vinext runtime
+- TypeScript
+- Astronomy Engine
+- CSS Modules
+- Cloudflare-compatible Sites build
+
+## Responsible interpretation
+
+Use Drishti to learn how Jyotish reasoning is assembled, compare alternative expressions, and document uncertainty. Avoid fatalistic claims, guaranteed predictions, fear-based language, and decisions that remove a person's agency.
