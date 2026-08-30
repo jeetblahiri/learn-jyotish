@@ -1,0 +1,24 @@
+.notebookGrid { display: grid; grid-template-columns: minmax(18rem, 0.72fr) minmax(22rem, 1.28fr); gap: 1rem; }
+.noteComposer,.noteList { padding: clamp(1.1rem, 2vw, 1.6rem); border: 1px solid var(--line); border-radius: 1rem; background: var(--surface); }
+.noteComposer { align-self: start; display: grid; gap: 0.9rem; }
+.eyebrow { margin: 0; color: var(--accent); font-size: 0.68rem; font-weight: 850; letter-spacing: 0.12em; text-transform: uppercase; }
+.noteComposer h2,.noteList h2 { margin: 0.2rem 0 0; font: 570 clamp(1.45rem, 2.4vw, 2rem)/1.08 var(--font-serif), Georgia, serif; }
+.noteComposer > p:not(.eyebrow) { margin: 0; color: var(--muted); font-size: 0.88rem; line-height: 1.6; }
+.noteComposer label { display: grid; gap: 0.4rem; color: var(--muted); font-size: 0.75rem; font-weight: 750; }
+.noteComposer textarea { resize: vertical; min-height: 8rem; }
+.noteComposer button { justify-self: start; min-height: 2.7rem; padding: 0 1rem; border: 0; border-radius: 0.6rem; background: var(--ink); color: white; font-weight: 800; cursor: pointer; }
+.noteList { display: grid; gap: 0.75rem; align-content: start; }
+.noteCard { padding: 1rem; border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 0.75rem; background: var(--surface-2); }
+.noteCard header { display: flex; justify-content: space-between; gap: 1rem; align-items: center; }
+.noteCard header span { color: var(--accent); font-size: 0.68rem; font-weight: 850; letter-spacing: 0.08em; text-transform: uppercase; }
+.noteCard header button { border: 0; background: transparent; color: var(--muted); font-size: 0.72rem; cursor: pointer; }
+.noteCard h3 { margin: 0.7rem 0 0.35rem; font-size: 1rem; }
+.noteCard p { margin: 0; color: var(--muted); font-size: 0.86rem; line-height: 1.55; white-space: pre-wrap; }
+.noteCard time { display: block; margin-top: 0.8rem; color: var(--muted); font-size: 0.68rem; }
+.noteCard.counter { border-left-color: #a85349; }
+.noteCard.support { border-left-color: #4d7c68; }
+.noteCard.hypothesis { border-left-color: #765f9e; }
+.noteCard.outcome { border-left-color: #477a92; }
+.emptyNote { display: grid; gap: 0.3rem; min-height: 10rem; place-content: center; padding: 2rem; border: 1px dashed var(--line-strong); border-radius: 0.8rem; color: var(--muted); text-align: center; }
+.emptyNote b { color: var(--ink); }
+@media(max-width:800px){.notebookGrid{grid-template-columns:1fr}}

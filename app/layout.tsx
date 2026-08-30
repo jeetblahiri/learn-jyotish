@@ -7,7 +7,7 @@ const serif = Newsreader({ variable: "--font-serif", subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Drishti — Jyotish, made visible",
-  description: "Learn Vedic astrology through an interactive birth chart, a small generative grammar, guided aspects, and moving transits.",
+  description: "A transparent, interactive Jyotish learning laboratory with North Indian charts, nakshatras, vargas, Vimshottari timing, transits, evidence trails, cases, practice, and a private reasoning notebook.",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
